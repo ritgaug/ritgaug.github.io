@@ -35,10 +35,7 @@ html {
 
 body {
   margin: 0;
-  background:
-    linear-gradient(var(--line-soft) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px) 0 0 / 32px 32px,
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
   font-size: 17px;
@@ -288,9 +285,9 @@ footer.site-footer a { color: var(--text-muted); }
   width: 100%;
 }
 .caption {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--text-faint);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-muted);
   margin-top: 8px;
 }
 
@@ -300,18 +297,31 @@ footer.site-footer a { color: var(--text-muted); }
   padding: 8px 24px 40px;
 }
 
-.project-body section { margin-top: 52px; }
+.project-body section {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px solid var(--line);
+}
+.project-body section:first-child {
+  margin-top: 40px;
+  padding-top: 0;
+  border-top: none;
+}
 
 .section-label {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--copper);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--copper-bright);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
-.project-body h2 { font-size: 1.5rem; }
+.project-body h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
 
 .figure {
   margin: 26px 0;
