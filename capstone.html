@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UAV Air Quality Monitoring System — Ritwij Gautam</title>
+<title>UAV Air Quality Monitoring System | Ritwij Gautam</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,11 +22,11 @@
 </header>
 
 <div class="project-hero">
-  <div class="meta-label">Capstone Project — University of Guelph</div>
+  <div class="meta-label">Capstone Project at University of Guelph</div>
   <h1>UAV Air Quality Monitoring System</h1>
   <p class="hook">
     A UAV-mounted sensing platform for repeatable, waypoint-based air
-    quality measurements over agricultural environments — designed so the
+    quality measurements over agricultural environments, designed so the
     sensing payload can't compromise flight safety.
   </p>
   <div class="spec-row">
@@ -44,8 +44,7 @@
 <div class="project-body">
 
   <section>
-    <div class="section-label">The problem</div>
-    <h2>Measuring air quality over farmland, repeatably</h2>
+    <h2>The problem</h2>
     <p>
       Agricultural environments need air-quality data collected
       consistently across the same locations over time to be useful. A
@@ -61,15 +60,14 @@
   </section>
 
   <section>
-    <div class="section-label">How it works</div>
-    <h2>Sensing kept deliberately separate from flight control</h2>
+    <h2>How it works</h2>
     <p>
       The core design decision was architectural: the sensing and control
       framework is decoupled from the flight controller, so experimental
       data acquisition can't interfere with flight stability, safety, or
       deterministic flight behavior. If something goes wrong with a
       sensor or the data pipeline, the flight controller doesn't know or
-      care — it keeps flying the mission.
+      care, it keeps flying the mission.
     </p>
     <p>
       On the electronics side, I developed the interface connecting
@@ -80,13 +78,12 @@
     </p>
     <div class="figure">
       <img src="images/capstone/uav-schematic.png" alt="Sensor interface schematic for the ESP32 data acquisition system">
-      <div class="caption">Sensor interface schematic — ESP32-based data acquisition with I²C sensor integration.</div>
+      <div class="caption">Sensor interface schematic: ESP32-based data acquisition with I²C sensor integration.</div>
     </div>
   </section>
 
   <section>
-    <div class="section-label">Results</div>
-    <h2>What changed</h2>
+    <h2>Results</h2>
     <ul class="results-list">
       <li>Integrated the sensing payload onto the UAV platform and conducted flight testing to evaluate sensor response, noise, and power stability.</li>
       <li>Verified the modular architecture isolates data acquisition from the flight controller, preserving flight safety and control behavior.</li>

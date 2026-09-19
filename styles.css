@@ -1,5 +1,5 @@
 /* ============================================
-   Ritwij Gautam — Portfolio
+   Ritwij Gautam Portfolio
    Design grounded in PCB/schematic visual language:
    deep circuit-board blue-black, copper-trace accent,
    graph-paper grid, monospace for technical specs.
@@ -306,16 +306,6 @@ footer.site-footer a { color: var(--text-muted); }
   margin-top: 40px;
   padding-top: 0;
   border-top: none;
-}
-
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--copper-bright);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 10px;
 }
 
 .project-body h2 {

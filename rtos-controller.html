@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Real-Time PID Temperature Controller — Ritwij Gautam</title>
+<title>Real-Time PID Temperature Controller | Ritwij Gautam</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,7 +22,7 @@
 </header>
 
 <div class="project-hero">
-  <div class="meta-label">Course project — ENGG4420 Real-Time Systems Design</div>
+  <div class="meta-label">Course project, ENGG4420 Real-Time Systems Design</div>
   <h1>Real-Time PID Temperature Controller</h1>
   <span class="status-tag in-progress">Update status before publishing</span>
   <p class="hook">
@@ -37,35 +37,34 @@
     <span class="spec"><b>Link</b> USB / TeraTerm</span>
   </div>
   <div class="todo-box" style="margin-top: 22px;">
-    <b>Repo link</b> — add a <code>&lt;a class="repo-link"&gt;</code> once you push this project to GitHub, same as the oscilloscope page.
+    <b>Repo link</b>: add a <code>&lt;a class="repo-link"&gt;</code> once you push this project to GitHub, same as the oscilloscope page.
   </div>
 </div>
 
 <div class="hero-image">
-  <img src="images/rtos-controller/hero.svg" alt="Placeholder — STM32F4 board and LCD">
+  <img src="images/rtos-controller/hero.svg" alt="Placeholder: STM32F4 board and LCD">
   <div class="caption">STM32F4 dev board running the controller, LCD showing live setpoint/PV/output.</div>
 </div>
 
 <div class="project-body">
 
   <div class="todo-box">
-    <b>Photo checklist</b> — capture these and drop them into
+    <b>Photo checklist</b>: capture these and drop them into
     <code>images/rtos-controller/</code> with the matching filename, replacing
     the placeholder SVG of the same name. Since the plant is simulated
     (no physical hardware being controlled), diagrams and results carry
     more weight here than hardware photos:
     <ul style="margin: 10px 0 0 0; padding-left: 20px;">
-      <li><code>hero.svg → hero.jpg</code> — STM32F4 board + LCD, powered on, showing live values</li>
-      <li><code>architecture.svg → architecture.png</code> — task diagram: DDC control, display, input, and clock tasks and how they share data</li>
-      <li><code>lcd-closeup.svg → lcd-closeup.jpg</code> — close-up of the LCD readout (setpoint / process variable / controller output)</li>
-      <li><code>response-graph.svg → response-graph.png</code> — setpoint step-response plot (setpoint vs. time), same style as a P/PD control plot</li>
-      <li><code>teraterm.svg → teraterm.png</code> — TeraTerm/USB session showing live communication with the LabVIEW plant model</li>
+      <li><code>hero.svg → hero.jpg</code>: STM32F4 board + LCD, powered on, showing live values</li>
+      <li><code>architecture.svg → architecture.png</code>: task diagram showing DDC control, display, input, and clock tasks and how they share data</li>
+      <li><code>lcd-closeup.svg → lcd-closeup.jpg</code>: close-up of the LCD readout (setpoint / process variable / controller output)</li>
+      <li><code>response-graph.svg → response-graph.png</code>: setpoint step-response plot (setpoint vs. time), same style as a P/PD control plot</li>
+      <li><code>teraterm.svg → teraterm.png</code>: TeraTerm/USB session showing live communication with the LabVIEW plant model</li>
     </ul>
   </div>
 
   <section>
-    <div class="section-label">The problem</div>
-    <h2>A control loop that has to hit its deadline, every time</h2>
+    <h2>The problem</h2>
     <p>
       The brief: build an embedded controller that performs direct
       digital control (DDC) of a hot-air plant's temperature using a PID
@@ -79,8 +78,7 @@
   </section>
 
   <section>
-    <div class="section-label">How it works</div>
-    <h2>Separate tasks under uC/OS-III, not one big loop</h2>
+    <h2>How it works</h2>
     <p>
       Rather than one monolithic loop handling everything, the system is
       built as multiple tasks under uC/OS-III, a preemptive
@@ -93,7 +91,7 @@
       the display task exists, and vice versa.
     </p>
     <div class="figure">
-      <img src="images/rtos-controller/architecture.svg" alt="Placeholder — task architecture diagram">
+      <img src="images/rtos-controller/architecture.svg" alt="Placeholder: task architecture diagram">
       <div class="caption">Task architecture &mdash; DDC control, display, input, and clock tasks under uC/OS-III.</div>
     </div>
     <p>
@@ -117,26 +115,25 @@
     </p>
     <div class="figure two-up">
       <div>
-        <img src="images/rtos-controller/lcd-closeup.svg" alt="Placeholder — LCD close-up">
+        <img src="images/rtos-controller/lcd-closeup.svg" alt="Placeholder: LCD close-up">
         <div class="caption">Live setpoint, process variable, and controller output on the LCD.</div>
       </div>
       <div>
-        <img src="images/rtos-controller/teraterm.svg" alt="Placeholder — TeraTerm session">
+        <img src="images/rtos-controller/teraterm.svg" alt="Placeholder: TeraTerm session">
         <div class="caption">USB link to the simulated plant model for closed-loop testing.</div>
       </div>
     </div>
   </section>
 
   <section>
-    <div class="section-label">Results</div>
-    <h2>What changed</h2>
+    <h2>Results</h2>
     <ul class="results-list">
       <li>Implemented manual and automatic control with bumpless transfer between them, driven from onboard buttons.</li>
       <li>Tuned PID gains (Kc, Ti, Td) using Ziegler&ndash;Nichols open-loop and closed-loop methods and validated the closed-loop response against the theoretical plant model.</li>
       <li>Held the 200ms control loop deadline reliably by giving the DDC task the highest priority under uC/OS-III's preemptive scheduler.</li>
     </ul>
     <div class="figure" style="margin-top: 26px;">
-      <img src="images/rtos-controller/response-graph.svg" alt="Placeholder — PID step response graph">
+      <img src="images/rtos-controller/response-graph.svg" alt="Placeholder: PID step response graph">
       <div class="caption">Closed-loop step response &mdash; setpoint vs. measured temperature over time.</div>
     </div>
   </section>
