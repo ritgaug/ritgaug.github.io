@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two-Channel USB Oscilloscope — Ritwij Gautam</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="name">RITWIJ <span>GAUTAM</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="flonergia.html">FloNergia</a>
+      <a href="capstone.html">UAV Capstone</a>
+      <a href="oscilloscope.html" class="current">Oscilloscope</a>
+      <a href="rtos-controller.html">RTOS Controller</a>
+    </nav>
+  </div>
+</header>
+
+<div class="project-hero">
+  <div class="meta-label">Personal project</div>
+  <h1>Two-Channel USB Oscilloscope</h1>
+  <p class="hook">
+    A two-channel, 0&ndash;3.3V, 500kHz-bandwidth signal acquisition device,
+    designed from requirements through schematic capture, PCB layout, and
+    a hybrid interrupt/DMA firmware architecture around an STM32.
+  </p>
+  <div class="spec-row">
+    <span class="spec"><b>MCU</b> STM32</span>
+    <span class="spec"><b>Interfaces</b> SPI · USB CDC</span>
+    <span class="spec"><b>Tools</b> KiCad</span>
+    <span class="spec"><b>Firmware</b> Interrupt / DMA / main-loop</span>
+  </div>
+  <a class="repo-link" href="https://github.com/ritgaug/stm32-usb-oscilloscope">View code on GitHub →</a>
+</div>
+
+<div class="hero-image">
+  <img src="images/oscilloscope/hero.svg" alt="Placeholder — final assembled PCB">
+  <div class="caption">Final assembled PCB, top-down.</div>
+</div>
+
+<div class="project-body">
+
+  <div class="todo-box">
+    <b>Photo checklist</b> — capture these and drop them into
+    <code>images/oscilloscope/</code> with the matching filename, replacing
+    the placeholder SVG of the same name:
+    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+      <li><code>hero.svg → hero.jpg</code> — final PCB, top-down, well-lit</li>
+      <li><code>schematic.svg → schematic.png</code> — full KiCad schematic view</li>
+      <li><code>pcb-layout.svg → pcb-layout.png</code> — KiCad routing view or 3D render</li>
+      <li><code>breadboard.svg → breadboard.jpg</code> — breadboard prototype photo</li>
+      <li><code>architecture.svg → architecture.png</code> — interrupt/DMA/main-loop diagram</li>
+      <li><code>logic-analyzer.svg → logic-analyzer.png</code> — SPI bus capture screenshot</li>
+      <li><code>demo.svg → demo.jpg</code> or <code>.gif</code> — live waveform on LCD or PC plot</li>
+    </ul>
+  </div>
+
+  <section>
+    <div class="section-label">The problem</div>
+    <h2>Learning fundamentals by building a real instrument</h2>
+    <p>
+      Not an instrument anyone would actually rely on — deliberately
+      scoped as an introductory project — but a real one nonetheless: a
+      two-channel oscilloscope that has to sample, display, and stream
+      real signals under real timing constraints. The goal was to go
+      through a full hardware design process, from an abstract idea down
+      to a working PCB, rather than just wiring up a dev board.
+    </p>
+  </section>
+
+  <section>
+    <div class="section-label">How it works</div>
+    <h2>Requirements first, then schematic, then breadboard, then PCB</h2>
+    <p>
+      I started by breaking the abstract idea of "an oscilloscope" into
+      concrete hardware and firmware requirements: two BNC input channels
+      reading 0&ndash;3.3V, a graphic display capable of showing a live
+      channel, a 500kHz sample rate (chosen so the ADC could hit roughly
+      10 samples per signal period, well past the Nyquist minimum), USB
+      data streaming and logging to a PC, physical buttons for channel
+      and recording control, and a small form factor.
+    </p>
+    <p>
+      Around those requirements, I selected an STM32 microcontroller with
+      a built-in 12-bit ADC (5 mega-samples/sec — comfortably above the
+      500kHz target), a SPI graphic LCD, and a USB CDC peripheral for the
+      PC link. From there: schematic capture in KiCad, careful attention
+      to power rails and decoupling capacitors around the MCU and
+      display, and a full BOM sourced from real component datasheets.
+    </p>
+    <div class="figure two-up">
+      <div>
+        <img src="images/oscilloscope/schematic.svg" alt="Placeholder — full schematic">
+        <div class="caption">Full schematic — MCU, LCD, ADC input stage, and USB power delivery.</div>
+      </div>
+      <div>
+        <img src="images/oscilloscope/pcb-layout.svg" alt="Placeholder — PCB layout">
+        <div class="caption">PCB layout and routing.</div>
+      </div>
+    </div>
+    <p>
+      Before committing to a PCB, I built and validated the design on a
+      breadboard using a dev board with the same MCU — the same rule I'd
+      apply to any project: verify the wiring and the firmware
+      architecture works before you spend money and time on a board spin.
+    </p>
+    <div class="figure">
+      <img src="images/oscilloscope/breadboard.svg" alt="Placeholder — breadboard prototype">
+      <div class="caption">Breadboard prototype — validating wiring and firmware before committing to a PCB.</div>
+    </div>
+    <p>
+      The firmware architecture is the part I'm most deliberate about.
+      A pure polling loop would miss button presses during a slow display
+      render; a fully interrupt-driven design risks starving the system
+      if any one interrupt handler runs too long. I used a hybrid: DMA
+      handles ADC sampling and USB data transfer without CPU
+      intervention, short interrupt service routines just set event
+      flags (never do heavy work), and the main loop handles user input
+      and display rendering — the two tasks that actually need
+      significant CPU time.
+    </p>
+    <div class="figure">
+      <img src="images/oscilloscope/architecture.svg" alt="Placeholder — firmware architecture diagram">
+      <div class="caption">Firmware architecture — DMA-driven sampling, lightweight ISRs, main-loop rendering.</div>
+    </div>
+    <div class="code-snippet">
+      <div class="snippet-label">ISR pattern — set a flag, do the work in the main loop</div>
+      <pre>void HAL_GPIO_EXTI_Callback(uint16_t pin) {
+    // Debounce, then just flag the event — never render
+    // or do heavy work inside an ISR.
+    button_events |= EVENT_CHANNEL_1_PRESSED;
+}
+
+// main loop
+if (button_events & EVENT_CHANNEL_1_PRESSED) {
+    button_events &amp;= ~EVENT_CHANNEL_1_PRESSED;
+    toggle_channel(CHANNEL_1);
+}</pre>
+    </div>
+    <p>
+      I validated the SPI communication to the LCD against the datasheet
+      timing using a logic analyzer — catching timing and protocol issues
+      before they became "why is my display blank" debugging sessions.
+    </p>
+    <div class="figure">
+      <img src="images/oscilloscope/logic-analyzer.svg" alt="Placeholder — logic analyzer SPI capture">
+      <div class="caption">Logic analyzer capture verifying SPI timing against the display datasheet.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">Results</div>
+    <h2>What changed</h2>
+    <ul class="results-list">
+      <li>Validated the full signal path: ADC sampling via DMA, live rendering to the SPI LCD, and real-time streaming of channel data to a PC over USB.</li>
+      <li>Confirmed SPI bus timing and communication correctness against datasheet specifications using a logic analyzer.</li>
+      <li>Proved the wiring and firmware architecture on a breadboard before committing to a PCB spin — the design worked as intended on first board bring-up.</li>
+    </ul>
+  </section>
+
+  <div class="figure" style="margin-top: 40px;">
+    <img src="images/oscilloscope/demo.svg" alt="Placeholder — live demo">
+    <div class="caption">Live demo — waveform streaming to the LCD and PC in real time.</div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span><a href="index.html">← Back to all projects</a></span>
+    <span><a href="mailto:ritwijgautam@gmail.com">ritwijgautam@gmail.com</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
