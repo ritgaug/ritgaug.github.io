@@ -1,1 +1,0 @@
-# ritgaug.github.io
