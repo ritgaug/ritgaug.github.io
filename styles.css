@@ -350,6 +350,28 @@ footer.site-footer a { color: var(--text-muted); }
   border-radius: 50%;
 }
 
+.next-steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.next-steps-list li {
+  padding: 12px 0 12px 26px;
+  border-top: 1px solid var(--line-soft);
+  position: relative;
+}
+.next-steps-list li:first-child { border-top: none; }
+.next-steps-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: 8px;
+  height: 8px;
+  background: var(--copper);
+  border-radius: 50%;
+}
+
 .code-snippet {
   margin: 22px 0;
   background: var(--panel);

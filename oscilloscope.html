@@ -16,49 +16,35 @@
       <a href="flonergia.html">FloNergia</a>
       <a href="capstone.html">UAV Capstone</a>
       <a href="oscilloscope.html" class="current">Oscilloscope</a>
-      <a href="rtos-controller.html">RTOS Controller</a>
     </nav>
   </div>
 </header>
 
 <div class="project-hero">
   <div class="meta-label">Personal project</div>
+  <span class="status-tag in-progress">In progress: schematic design</span>
   <h1>Two-Channel USB Oscilloscope</h1>
   <p class="hook">
-    A two-channel, 0&ndash;3.3V, 500kHz-bandwidth signal acquisition device,
-    designed from requirements through schematic capture, PCB layout, and
-    a hybrid interrupt/DMA firmware architecture around an STM32.
+    A two-channel, 0&ndash;3.3V, 500kHz-bandwidth signal acquisition device
+    being designed from requirements through schematic capture around an
+    STM32L432. Currently mid-schematic. PCB layout, a breadboard prototype,
+    and firmware are still ahead.
   </p>
   <div class="spec-row">
-    <span class="spec"><b>MCU</b> STM32</span>
-    <span class="spec"><b>Interfaces</b> SPI · USB CDC</span>
-    <span class="spec"><b>Tools</b> KiCad</span>
-    <span class="spec"><b>Firmware</b> Interrupt / DMA / main-loop</span>
+    <span class="spec"><b>MCU</b> STM32L432</span>
+    <span class="spec"><b>Display</b> 2.8" SPI LCD (ST75256)</span>
+    <span class="spec"><b>Tools</b> KiCad · STM32CubeMX</span>
+    <span class="spec"><b>Interfaces</b> SPI · USB CDC · ADC</span>
   </div>
   <a class="repo-link" href="https://github.com/ritgaug/stm32-usb-oscilloscope">View code on GitHub →</a>
 </div>
 
 <div class="hero-image">
-  <img src="images/oscilloscope/hero.svg" alt="Placeholder: final assembled PCB">
-  <div class="caption">Final assembled PCB, top-down.</div>
+  <img src="images/oscilloscope/schematic.svg" alt="Placeholder: current schematic, in progress">
+  <div class="caption">Current schematic, work in progress.</div>
 </div>
 
 <div class="project-body">
-
-  <div class="todo-box">
-    <b>Photo checklist</b>: capture these and drop them into
-    <code>images/oscilloscope/</code> with the matching filename, replacing
-    the placeholder SVG of the same name:
-    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
-      <li><code>hero.svg → hero.jpg</code>: final PCB, top-down, well-lit</li>
-      <li><code>schematic.svg → schematic.png</code>: full KiCad schematic view</li>
-      <li><code>pcb-layout.svg → pcb-layout.png</code>: KiCad routing view or 3D render</li>
-      <li><code>breadboard.svg → breadboard.jpg</code>: breadboard prototype photo</li>
-      <li><code>architecture.svg → architecture.png</code>: interrupt/DMA/main-loop diagram</li>
-      <li><code>logic-analyzer.svg → logic-analyzer.png</code>: SPI bus capture screenshot</li>
-      <li><code>demo.svg → demo.jpg</code> or <code>.gif</code>: live waveform on LCD or PC plot</li>
-    </ul>
-  </div>
 
   <section>
     <h2>The problem</h2>
@@ -66,14 +52,15 @@
       Not an instrument anyone would actually rely on. Deliberately
       scoped as an introductory project, but a real one nonetheless: a
       two-channel oscilloscope that has to sample, display, and stream
-      real signals under real timing constraints. The goal was to go
+      real signals under real timing constraints. The goal is to go
       through a full hardware design process, from an abstract idea down
-      to a working PCB, rather than just wiring up a dev board.
+      to a working PCB and firmware, rather than just wiring up a dev
+      board.
     </p>
   </section>
 
   <section>
-    <h2>How it works</h2>
+    <h2>What I've done so far</h2>
     <p>
       I started by breaking the abstract idea of "an oscilloscope" into
       concrete hardware and firmware requirements: two BNC input channels
@@ -84,85 +71,68 @@
       and recording control, and a small form factor.
     </p>
     <p>
-      Around those requirements, I selected an STM32 microcontroller with
-      a built-in 12-bit ADC (5 mega-samples/sec, comfortably above the
-      500kHz target), a SPI graphic LCD, and a USB CDC peripheral for the
-      PC link. From there: schematic capture in KiCad, careful attention
-      to power rails and decoupling capacitors around the MCU and
-      display, and a full BOM sourced from real component datasheets.
+      Around those requirements, I selected an STM32L432 microcontroller
+      for its built-in 12-bit ADC (5 mega-samples/sec, comfortably above
+      the 500kHz target), small package size, and USB support, and a
+      2.8" SPI graphic LCD (192x96, ST75256 controller) for the display,
+      chosen partly because SPI keeps the pin count manageable on a
+      small, GPIO-constrained microcontroller. From there I started
+      schematic capture in KiCad, importing symbols for both parts and
+      wiring up the single 3.3V power rail the design needs.
     </p>
-    <div class="figure two-up">
-      <div>
-        <img src="images/oscilloscope/schematic.svg" alt="Placeholder: full schematic">
-        <div class="caption">Full schematic: MCU, LCD, ADC input stage, and USB power delivery.</div>
-      </div>
-      <div>
-        <img src="images/oscilloscope/pcb-layout.svg" alt="Placeholder: PCB layout">
-        <div class="caption">PCB layout and routing.</div>
-      </div>
-    </div>
     <p>
-      Before committing to a PCB, I built and validated the design on a
-      breadboard using a dev board with the same MCU, the same rule I'd
-      apply to any project: verify the wiring and the firmware
-      architecture works before you spend money and time on a board spin.
+      A meaningful chunk of the work so far has been getting the details
+      right rather than just wiring parts together. I used ST's AN4555
+      application note to correctly decouple the MCU: 100nF ceramic and
+      10&micro;F tantalum/ceramic capacitors in parallel on every VDD/VSS
+      pair, placed as close to the pins as the note recommends. For the
+      LCD, I checked whether it needed the same treatment: tracing the
+      module's VDD pin showed it already has an onboard decoupling
+      capacitor, and the vendor's own interfacing guide confirms none is
+      needed externally, so I left it off rather than adding a redundant
+      part.
     </p>
     <div class="figure">
-      <img src="images/oscilloscope/breadboard.svg" alt="Placeholder: breadboard prototype">
-      <div class="caption">Breadboard prototype, validating wiring and firmware before committing to a PCB.</div>
+      <img src="images/oscilloscope/schematic.svg" alt="Placeholder: schematic detail, decoupling and pin definitions">
+      <div class="caption">Decoupling capacitors and pin definitions on the schematic so far.</div>
     </div>
     <p>
-      The firmware architecture is the part I'm most deliberate about.
-      A pure polling loop would miss button presses during a slow display
-      render; a fully interrupt-driven design risks starving the system
-      if any one interrupt handler runs too long. I used a hybrid: DMA
-      handles ADC sampling and USB data transfer without CPU
-      intervention, short interrupt service routines just set event
-      flags (never do heavy work), and the main loop handles user input
-      and display rendering, the two tasks that actually need
-      significant CPU time.
+      I also used STM32CubeMX to work through the hardware pin
+      definitions before finishing the schematic: SPI1 configured as
+      transmit-only master (software chip select, since the LCD doesn't
+      need the hardware NSS line), ADC1 enabled for single-ended input,
+      USB configured for CDC (virtual COM port) so the device will show
+      up as a serial port for streaming, and GPIO grouped by where it
+      physically needs to sit on the board, buttons as interrupt pins,
+      LEDs as outputs, plus the SWD and UART pins needed for programming
+      and debug.
     </p>
-    <div class="figure">
-      <img src="images/oscilloscope/architecture.svg" alt="Placeholder: firmware architecture diagram">
-      <div class="caption">Firmware architecture: DMA-driven sampling, lightweight ISRs, main-loop rendering.</div>
-    </div>
-    <div class="code-snippet">
-      <div class="snippet-label">ISR pattern: set a flag, do the work in the main loop</div>
-      <pre>void HAL_GPIO_EXTI_Callback(uint16_t pin) {
-    // Debounce, then just flag the event, never render
-    // or do heavy work inside an ISR.
-    button_events |= EVENT_CHANNEL_1_PRESSED;
-}
-
-// main loop
-if (button_events & EVENT_CHANNEL_1_PRESSED) {
-    button_events &amp;= ~EVENT_CHANNEL_1_PRESSED;
-    toggle_channel(CHANNEL_1);
-}</pre>
-    </div>
-    <p>
-      I validated the SPI communication to the LCD against the datasheet
-      timing using a logic analyzer, catching timing and protocol issues
-      before they became "why is my display blank" debugging sessions.
-    </p>
-    <div class="figure">
-      <img src="images/oscilloscope/logic-analyzer.svg" alt="Placeholder: logic analyzer SPI capture">
-      <div class="caption">Logic analyzer capture verifying SPI timing against the display datasheet.</div>
-    </div>
   </section>
 
   <section>
-    <h2>Results</h2>
-    <ul class="results-list">
-      <li>Validated the full signal path: ADC sampling via DMA, live rendering to the SPI LCD, and real-time streaming of channel data to a PC over USB.</li>
-      <li>Confirmed SPI bus timing and communication correctness against datasheet specifications using a logic analyzer.</li>
-      <li>Proved the wiring and firmware architecture on a breadboard before committing to a PCB spin. The design worked as intended on first board bring-up.</li>
+    <h2>Next steps</h2>
+    <ul class="next-steps-list">
+      <li>Finish wiring the schematic: USB power delivery (5V to 3.3V regulation), the LCD's remaining SPI/control lines, push-button pull-ups, BNC signal input stage, and the SWD debug header.</li>
+      <li>Lay out the PCB in KiCad once the schematic is complete.</li>
+      <li>Build and validate the design on a breadboard using a dev board with the same MCU before committing to a board spin.</li>
+      <li>Write the firmware: a hybrid interrupt/DMA/main-loop architecture so DMA handles ADC sampling and USB transfer, short ISRs just flag events, and the main loop handles user input and display rendering.</li>
+      <li>Validate SPI timing to the LCD against the datasheet using a logic analyzer once hardware exists to test.</li>
     </ul>
   </section>
 
-  <div class="figure" style="margin-top: 40px;">
-    <img src="images/oscilloscope/demo.svg" alt="Placeholder: live demo">
-    <div class="caption">Live demo: waveform streaming to the LCD and PC in real time.</div>
+  <div class="todo-box" style="margin-top: 52px;">
+    <b>Photo checklist</b>: capture these as each stage is finished, and drop
+    them into <code>images/oscilloscope/</code> with the matching filename,
+    replacing the placeholder SVG of the same name:
+    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+      <li><code>schematic.svg → schematic.png</code>: full KiCad schematic view once complete</li>
+      <li><code>pcb-layout.svg → pcb-layout.png</code>: KiCad routing view or 3D render</li>
+      <li><code>breadboard.svg → breadboard.jpg</code>: breadboard prototype photo</li>
+      <li><code>architecture.svg → architecture.png</code>: interrupt/DMA/main-loop diagram</li>
+      <li><code>logic-analyzer.svg → logic-analyzer.png</code>: SPI bus capture screenshot</li>
+      <li><code>hero.svg → hero.jpg</code>: final assembled PCB, top-down, well-lit</li>
+      <li><code>demo.svg → demo.jpg</code> or <code>.gif</code>: live waveform on LCD or PC plot</li>
+    </ul>
   </div>
 
 </div>
