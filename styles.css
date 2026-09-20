@@ -140,13 +140,12 @@ footer.site-footer a { color: var(--text-muted); }
 
 .hero h1 {
   font-size: 2.6rem;
-  max-width: 14ch;
 }
 
 .hero p.lede {
   font-size: 1.1rem;
   color: var(--text-muted);
-  max-width: 56ch;
+  max-width: none;
   margin-top: 18px;
 }
 
