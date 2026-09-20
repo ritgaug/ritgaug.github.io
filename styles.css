@@ -320,6 +320,9 @@ footer.site-footer a { color: var(--text-muted); }
 .figure img {
   border: 1px solid var(--line);
 }
+.figure.centered img {
+  margin: 0 auto;
+}
 .figure.two-up {
   display: grid;
   grid-template-columns: 1fr 1fr;
