@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoCAD Electrical Motor Control | Ritwij Gautam</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="name">RITWIJ <span>GAUTAM</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="flonergia.html">FloNergia</a>
+      <a href="capstone.html">UAV Capstone</a>
+      <a href="autocad.html" class="current">AutoCAD Electrical</a>
+    </nav>
+  </div>
+</header>
+
+<div class="project-hero">
+  <div class="meta-label">Course project, AutoCAD Electrical</div>
+  <h1>3-Phase Motor Control Schematic</h1>
+  <p class="hook">
+    An electrical control schematic for a conveyor motor, drawn in AutoCAD
+    Electrical: a 3-phase power circuit, a 120V control circuit, and a PLC
+    input tying them together. Completed as the mini project of an
+    AutoCAD Electrical course.
+  </p>
+  <div class="spec-row">
+    <span class="spec"><b>Tool</b> AutoCAD Electrical</span>
+    <span class="spec"><b>Standard</b> NFPA (imperial)</span>
+    <span class="spec"><b>Power</b> 480V 3-phase</span>
+    <span class="spec"><b>Control</b> 120V</span>
+  </div>
+  <a class="repo-link" href="images/autocad/schematic.pdf">View full schematic PDF →</a>
+</div>
+
+<div class="hero-image">
+  <a href="images/autocad/schematic.pdf"><img src="images/autocad/schematic.png" alt="AutoCAD Electrical schematic of a 3-phase conveyor motor control circuit"></a>
+  <div class="caption">Full electrical schematic: power circuit on the left, control circuit and PLC input on the right. Click to open the full-size PDF.</div>
+</div>
+
+<div class="project-body">
+
+  <section>
+    <h2>About this project</h2>
+    <p>
+      This is a guided course project, not an original design. I followed
+      the course's mini project to draw a complete control schematic for a
+      conveyor motor, and the drawing above is the result. I include it
+      because it shows I can build a correctly structured electrical
+      schematic in the industry-standard tool, which is a different skill
+      from the PCB-level design in my other projects.
+    </p>
+  </section>
+
+  <section>
+    <h2>The power circuit</h2>
+    <p>
+      The left half of the drawing is the 3-phase power path. Three
+      power lines on rungs 100 to 102 pass through a circuit breaker
+      (CB100), individual fuses (FU108 to FU110), and the contacts of a
+      motor starter, then through an overload and a disconnect (DISC108)
+      to the conveyor motor (MTR108), which is also bonded to ground.
+      The three phases are drawn as separate wires, with the red, yellow
+      and blue colours coming from the wire layers in the project.
+    </p>
+  </section>
+
+  <section>
+    <h2>The control circuit</h2>
+    <p>
+      The right half runs at 120V, stepped down from the 480V supply by a
+      control transformer (T116). A normally closed stop button (PB120A)
+      and a start button (PB120) feed the motor starter coil (M120), and a
+      running light (LT122) is wired in parallel so it lights whenever the
+      starter is energised. A 15A breaker (CB125) protects the control
+      side.
+    </p>
+  </section>
+
+  <section>
+    <h2>The PLC input</h2>
+    <p>
+      The 120V control signal also goes to a PLC input module, an
+      Allen-Bradley 1771 isolated discrete input card (PLC126). The
+      connection between the two circuits is made with signal arrows
+      ("from 112" and "to 126") rather than a drawn wire, which keeps the
+      sheet readable. The starter contact on the power side is
+      cross-referenced to its coil on the control side, so each part
+      points to the other.
+    </p>
+  </section>
+
+  <section>
+    <h2>What I learned in AutoCAD Electrical</h2>
+    <ul class="results-list">
+      <li>Setting up a project and drawing with the ladder reference system, so every component sits on a numbered rung.</li>
+      <li>Inserting components from the icon menu, with tags assigned automatically from the rung number.</li>
+      <li>Wire layers by gauge and colour, and wire numbers that follow the connections.</li>
+      <li>Linking coils and contacts with cross-references, and connecting circuits with signal arrows.</li>
+      <li>Building a parametric PLC module and wiring its inputs.</li>
+      <li>Linking the schematic to a panel layout through component footprints, and plotting the whole project to PDF.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Panel layout</h2>
+    <p>
+      The project also includes a panel layout drawing of the physical
+      enclosure. It is not shown here.
+    </p>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Ritwij Gautam</span>
+    <span><a href="mailto:ritwijgautam@gmail.com">ritwijgautam@gmail.com</a> · (343) 263-7153</span>
+  </div>
+</footer>
+
+</body>
+</html>
